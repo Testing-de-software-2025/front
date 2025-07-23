@@ -1,0 +1,19 @@
+<div class="container">
+    <div class="main-card">
+        <div class="header">
+            <button class="back-button" (click)="goBack()">
+                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                <path d="M15 18L9 12L15 6" stroke="#111111" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                </svg>
+            </button>
+        </div>
+        <h1>Gestión de Deliveries</h1>
+        <p>Administrar repartidores, sus ubicaciones, estados y asignación de zonas</p>
+        <div class="actions-container">
+            <button class="action-button" routerLink="/delivery/crear">Crear repartidor</button>
+            <button class="action-button" routerLink="/delivery/listar">Listar Repartidores</button>
+            <button class="action-button" routerLink="/delivery/buscar-por-proximidad">Buscar por proximidad</button>
+            <button class="action-button" routerLink="/delivery/buscar-por-zona">Buscar por Zona</button>
+        </div>
+    </div>
+</div>

@@ -1,0 +1,107 @@
+<div class="list-container">
+  <div class="list-card">
+    <div class="header">
+      <button class="back-button" (click)="goBack()">
+        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+          <path d="M15 18L9 12L15 6" stroke="#111111" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+        </svg>
+      </button>
+      <h2>Listar Zonas</h2>
+    </div>
+
+    <div class="search-container">
+      <div class="search-input-wrapper">
+        <input type="text" class="search-input" placeholder="Buscar Zonas" [(ngModel)]="searchTerm" (input)="filterZones()">
+        <svg class="search-icon" width="20" height="20" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M11 19C15.4183 19 19 15.4183 19 11C19 6.58172 15.4183 3 11 3C6.58172 3 3 6.58172 3 11C3 15.4183 6.58172 19 11 19Z" stroke="#333" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/><path d="M21 21L16.65 16.65" stroke="#333" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+      </div>
+      <select class="filter-select" [(ngModel)]="filterBy" (change)="filterZones()">
+        <option value="all">Filtrar por...</option>
+        <option value="nombre">Nombre</option>
+        <option value="id">ID</option>
+        <option value="lat">Latitud</option>
+        <option value="long">Longitud</option>
+        <option value="radio">Radio</option>
+      </select>
+    </div>
+
+    <p class="list-title">Zonas Registradas:</p>
+
+    <div *ngIf="filteredZones.length > 0; else noZones">
+      <div class="zones-list">
+        <div class="zone-item" *ngFor="let zone of paginatedZones">
+          <div class="zone-info">
+            <p class="zone-name">{{ zone.name }}</p>
+            <div class="zone-details-grid">
+              <span><strong>ID:</strong> {{ zone.id }}</span>
+              <span><strong>Radio:</strong> {{ formatRadius(zone.radius) }} km</span>
+              <span><strong>Lat:</strong> {{ zone.location.lat }}</span>
+              <span><strong>Long:</strong> {{ zone.location.lng }}</span>
+            </div>
+          </div>
+          <div class="zone-actions">
+            <button class="icon-button" (click)="openEditPopup(zone)">
+              <svg width="20" height="20" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M11 4H4C3.46957 4 2.96086 4.21071 2.58579 4.58579C2.21071 4.96086 2 5.46957 2 6V20C2 20.5304 2.21071 21.0391 2.58579 21.4142C2.96086 21.7893 3.46957 22 4 22H18C18.5304 22 19.0391 21.7893 19.4142 21.4142C19.7893 21.0391 20 20.5304 20 20V13" stroke="#333" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/><path d="M18.5 2.5C18.8978 2.10218 19.4374 1.87868 20 1.87868C20.5626 1.87868 21.1022 2.10218 21.5 2.5C21.8978 2.89782 22.1213 3.43739 22.1213 4C22.1213 4.56261 21.8978 5.10218 21.5 5.5L12 15L8 16L9 12L18.5 2.5Z" stroke="#333" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+            </button>
+            <button class="icon-button" type="button" (click)="openDeletePopup(zone)">
+              <svg width="20" height="20" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M3 6H5H21" stroke="#E53E3E" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/><path d="M8 6V4C8 3.46957 8.21071 2.96086 8.58579 2.58579C8.96086 2.21071 9.46957 2 10 2H14C14.5304 2 15.0391 2.21071 15.4142 2.58579C15.7893 2.96086 16 3.46957 16 4V6M19 6V20C19 20.5304 18.7893 21.0391 18.4142 21.4142C18.0391 21.7893 17.5304 22 17 22H7C6.46957 22 5.96086 21.7893 5.58579 21.4142C5.21071 21.0391 5 20.5304 5 20V6H19Z" stroke="#E53E3E" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <ng-template #noZones>
+      <div class="no-zones-message">
+        <p>No hay zonas registradas.</p>
+        <p>Crea una para empezar a administrar.</p>
+      </div>
+    </ng-template>
+
+    <div class="pagination">
+      <button class="page-link" (click)="setPage(currentPage - 1)" [class.disabled]="totalPages <= 1 || currentPage === 1" [disabled]="totalPages <= 1 || currentPage === 1">&lt; Anterior</button>
+      <button *ngFor="let page of pages" class="page-number" [class.active]="page === currentPage" (click)="setPage(page)">{{ page }}</button>
+      <button class="page-link" (click)="setPage(currentPage + 1)" [class.disabled]="totalPages <= 1 || currentPage === totalPages" [disabled]="totalPages <= 1 || currentPage === totalPages">Siguiente &gt;</button>
+    </div>
+  </div>
+</div>
+
+<!-- Delete Confirmation Popup -->
+<!-- Edit Zone Popup -->
+<div class="popup-overlay" *ngIf="showEditPopup">
+  <div class="popup-card edit-popup">
+    <h3>Actualizar Zona</h3>
+    <form #editForm="ngForm" (ngSubmit)="saveZone()">
+      <div class="form-group">
+        <label>Nombre:</label>
+        <input type="text" name="name" [(ngModel)]="editingZoneData.name" required>
+      </div>
+      <div class="form-group">
+        <label>Lat:</label>
+        <input type="number" name="lat" [(ngModel)]="editingZoneData.lat" required>
+      </div>
+      <div class="form-group">
+        <label>Long:</label>
+        <input type="number" name="lng" [(ngModel)]="editingZoneData.lng" required>
+      </div>
+      <div class="form-group">
+        <label>Radio:</label>
+        <input type="number" name="radius" [(ngModel)]="editingZoneData.radius" required>
+      </div>
+      <div class="popup-actions">
+        <button type="button" class="btn-cancel" (click)="closeEditPopup()">Cancelar</button>
+        <button type="submit" class="btn-save" [disabled]="!editForm.valid">Guardar</button>
+      </div>
+    </form>
+  </div>
+</div>
+
+<!-- Delete Confirmation Popup -->
+<div class="popup-overlay" *ngIf="showDeletePopup">
+  <div class="popup-card">
+    <p>¿Estás seguro que quieres eliminar esta zona?</p>
+    <div class="popup-actions">
+      <button class="btn-cancel" (click)="closeDeletePopup()">cancelar</button>
+      <button class="btn-delete" (click)="confirmDelete()">eliminar</button>
+    </div>
+  </div>
+</div>

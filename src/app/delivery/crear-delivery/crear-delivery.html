@@ -1,0 +1,36 @@
+<div class="form-container">
+  <div class="form-card">
+    <div class="header">
+      <button class="back-button" (click)="goBack()">
+        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+          <path d="M15 18L9 12L15 6" stroke="#111111" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+        </svg>
+      </button>
+    </div>
+    <div class="content">
+      <h2>Crear Deliveries</h2>
+      <form #deliveryForm="ngForm" (ngSubmit)="createDelivery()">
+        <div class="form-group">
+          <label for="personId">Person ID</label>
+          <input type="text" id="personId" name="personId" [(ngModel)]="deliveryData.personId" class="form-control" placeholder="Person ID" required>
+        </div>
+        <div class="form-group">
+          <label for="radius">Radio (km)</label>
+          <input type="number" id="radius" name="radius" [(ngModel)]="deliveryData.radius" class="form-control" placeholder="Radio" required>
+        </div>
+        <div class="form-group">
+          <label for="latitude">Latitud</label>
+          <input type="number" id="latitude" name="latitude" [(ngModel)]="deliveryData.latitude" class="form-control" placeholder="Latitud" required>
+        </div>
+        <div class="form-group">
+          <label for="longitude">Longitud</label>
+          <input type="number" id="longitude" name="longitude" [(ngModel)]="deliveryData.longitude" class="form-control" placeholder="Longitud" required>
+        </div>
+        <div *ngIf="errorMessage" class="error-container">
+          <p class="error-message">{{ errorMessage }}</p>
+        </div>
+        <button type="submit" class="btn-submit" [disabled]="!deliveryForm.form.valid">Crear Repartidor</button>
+      </form>
+    </div>
+  </div>
+</div>

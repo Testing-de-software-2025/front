@@ -1,0 +1,128 @@
+<div class="list-container">
+  <div class="list-card">
+    <div class="header">
+      <button class="back-button" (click)="goBack()">
+        <svg
+          width="24"
+          height="24"
+          viewBox="0 0 24 24"
+          fill="none"
+          xmlns="http://www.w3.org/2000/svg"
+        >
+          <path
+            d="M15 18L9 12L15 6"
+            stroke="#111111"
+            stroke-width="2"
+            stroke-linecap="round"
+            stroke-linejoin="round"
+          />
+        </svg>
+      </button>
+      <h2>Búsqueda por Proximidad</h2>
+    </div>
+
+    <div class="search-form">
+      <div class="inputs-container">
+        <input
+          type="number"
+          class="search-input"
+          placeholder="Lat: ---"
+          [(ngModel)]="lat"
+        />
+        <input
+          type="number"
+          class="search-input"
+          placeholder="Long: ---"
+          [(ngModel)]="long"
+        />
+        <input
+          type="number"
+          class="search-input"
+          placeholder="Radio: --- (km)"
+          [(ngModel)]="radius"
+        />
+      </div>
+      <button
+        class="search-button"
+        (click)="searchByProximity()"
+        [disabled]="lat === null || long === null || radius === null"
+      >
+        <svg
+          class="search-icon"
+          width="24"
+          height="24"
+          viewBox="0 0 24 24"
+          fill="none"
+          xmlns="http://www.w3.org/2000/svg"
+        >
+          <path
+            d="M11 19C15.4183 19 19 15.4183 19 11C19 6.58172 15.4183 3 11 3C6.58172 3 3 6.58172 3 11C3 15.4183 6.58172 19 11 19Z"
+            stroke-width="2"
+            stroke-linecap="round"
+            stroke-linejoin="round"
+          />
+          <path
+            d="M21 21L16.65 16.65"
+            stroke-width="2"
+            stroke-linecap="round"
+            stroke-linejoin="round"
+          />
+        </svg>
+      </button>
+    </div>
+
+    <!-- Results Section -->
+    <div *ngIf="deliveries.length > 0">
+      <div class="results-list">
+        <div class="result-item" *ngFor="let delivery of deliveries">
+          <div class="delivery-info-vertical">
+            <p><strong>ID:</strong> {{ delivery.id }}</p>
+            <p><strong>Person ID:</strong> {{ delivery.personId }}</p>
+            <p><strong>Latitud:</strong> {{ delivery.location.latitude }}</p>
+            <p><strong>Longitud:</strong> {{ delivery.location.longitude }}</p>
+            <p><strong>Zona/s:</strong> {{ getZoneNames(delivery.zones) }}</p>
+            <p>
+              <strong>Estado:</strong>
+              <span class="status-badge">{{ delivery.status }}</span>
+            </p>
+            <p><strong>Radio:</strong> {{ formatRadius(delivery.radius) }} km</p>
+          </div>
+        </div>
+      </div>
+      <div class="pagination">
+        <a
+          href="#"
+          class="page-link"
+          (click)="setPage(currentPage - 1); $event.preventDefault()"
+          [class.disabled]="currentPage === 1 || totalPages === 0"
+          >&lt; Anterior</a
+        >
+        <a
+          href="#"
+          *ngFor="let page of pages"
+          class="page-number"
+          [class.active]="page === currentPage"
+          (click)="setPage(page); $event.preventDefault()"
+          >{{ page }}</a
+        >
+        <a
+          href="#"
+          class="page-link"
+          (click)="setPage(currentPage + 1); $event.preventDefault()"
+          [class.disabled]="currentPage === totalPages || totalPages === 0"
+          >Siguiente &gt;</a
+        >
+      </div>
+    </div>
+
+    <!-- Messages Section -->
+    <div *ngIf="!searchPerformed && !errorMessage">
+      <p class="no-data-message">
+        Ingrese latitud, longitud y radio para buscar repartidores cercanos.
+      </p>
+    </div>
+    <div *ngIf="errorMessage">
+      <p class="no-data-message">{{ errorMessage }}</p>
+    </div>
+  </div>
+</div>

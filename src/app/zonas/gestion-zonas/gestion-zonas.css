@@ -1,0 +1,92 @@
+/* General Container */
+.zonas-container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  min-height: 100vh;
+  background-color: #f8f9fa;
+  padding: 1rem;
+  box-sizing: border-box;
+  font-family: 'Segoe UI', sans-serif;
+}
+
+/* Card */
+.zonas-card {
+  background-color: #ffffff;
+  border-radius: 16px;
+  width: 100%;
+  max-width: 400px;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.05);
+  padding: 24px;
+  text-align: center;
+}
+
+/* Header */
+.header {
+  display: flex;
+  justify-content: flex-start;
+  margin-bottom: 16px;
+}
+
+.back-button {
+  background: none;
+  border: 1px solid #e0e0e0;
+  border-radius: 50%;
+  width: 40px;
+  height: 40px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  cursor: pointer;
+  transition: background-color 0.2s;
+}
+
+.back-button:hover {
+  background-color: #f0f0f0;
+}
+
+/* Content */
+.content h1 {
+  font-size: 24px;
+  font-weight: 700;
+  color: #111111;
+  margin: 0 0 8px 0;
+}
+
+.content p {
+  font-size: 14px;
+  color: #6c757d;
+  margin-bottom: 32px;
+  max-width: 280px;
+  margin-left: auto;
+  margin-right: auto;
+}
+
+/* Actions Container */
+.actions-container {
+  border: 1px solid #ade8f4;
+  border-radius: 12px;
+  padding: 24px;
+  background-color: #f0fcff;
+}
+
+.action-button {
+  width: 100%;
+  padding: 14px;
+  border-radius: 8px;
+  border: 1px solid #48cae4;
+  background-color: #ffffff;
+  color: #03045e;
+  font-weight: 600;
+  font-size: 16px;
+  cursor: pointer;
+  transition: background-color 0.2s, color 0.2s;
+}
+
+.action-button:hover {
+  background-color: #ade8f4;
+}
+
+.action-button:not(:last-child) {
+  margin-bottom: 16px;
+}

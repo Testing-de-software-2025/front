@@ -1,0 +1,51 @@
+<div class="list-container">
+  <div class="list-card">
+    <div class="header">
+      <button class="back-button" (click)="goBack()">
+        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+          <path d="M15 18L9 12L15 6" stroke="#111111" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+        </svg>
+      </button>
+      <h2>Búsqueda de Deliveries por Zona</h2>
+    </div>
+
+    <p class="subtitle">Buscar repartidores por zona</p>
+
+    <div class="search-form">
+      <select class="zone-select" [(ngModel)]="selectedZoneId" (ngModelChange)="onZoneChange()">
+        <option [ngValue]="null" disabled>Selecciona una zona</option>
+        <option *ngFor="let zone of allZones" [value]="zone.id">{{ zone.name }}</option>
+      </select>
+    </div>
+
+    <div *ngIf="deliveries.length > 0">
+      <div class="results-list">
+        <div class="result-item" *ngFor="let delivery of deliveries">
+          <div class="delivery-info-grid">
+            <p><strong>ID:</strong></p><p>{{ delivery.id }}</p>
+            <p><strong>Person ID:</strong></p><p>{{ delivery.personId }}</p>
+            <p><strong>Latitud:</strong></p><p>{{ delivery.location.latitude }}</p>
+            <p><strong>Longitud:</strong></p><p>{{ delivery.location.longitude }}</p>
+            <p><strong>Radio:</strong></p><p>{{ delivery.radius }} km</p>
+            <p><strong>Estado:</strong></p><p><span class="status-badge" [ngClass]="getStatusClass(delivery.status)">{{ delivery.status }}</span></p>
+            <p><strong>Zonas:</strong></p><p>{{ getZoneNames(delivery.zones) }}</p>
+          </div>
+        </div>
+      </div>
+      <div class="pagination" *ngIf="totalPages > 0">
+        <a href="#" class="page-link" (click)="setPage(currentPage - 1); $event.preventDefault()" [class.disabled]="currentPage === 1">&lt; Anterior</a>
+        <a href="#" *ngFor="let page of pages" class="page-number" [class.active]="page === currentPage" (click)="setPage(page); $event.preventDefault()">{{ page }}</a>
+        <a href="#" class="page-link" (click)="setPage(currentPage + 1); $event.preventDefault()" [class.disabled]="currentPage === totalPages">Siguiente &gt;</a>
+      </div>
+    </div>
+
+    <div *ngIf="selectedZoneId && deliveries.length === 0">
+        <p class="no-data-message">No se encontraron repartidores para la zona seleccionada.</p>
+    </div>
+
+    <div *ngIf="!selectedZoneId">
+        <p class="no-data-message">Seleccione una zona para ver los repartidores asociados.</p>
+    </div>
+
+  </div>
+</div>

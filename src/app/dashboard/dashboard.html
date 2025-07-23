@@ -1,0 +1,34 @@
+<div class="dashboard-container">
+  <header class="dashboard-header">
+    <div class="logo">
+       <img src="favicon.jpg" alt="DelyTrack Logo" width="36" height="36">
+      <span>DelyTrack</span>
+    </div>
+    <button class="btn btn-link logout-button" (click)="logout()">Cerrar sesión</button>
+  </header>
+
+  <main class="dashboard-main">
+    <h1>Bienvenido a DelyTrack</h1>
+    <p class="subtitle">Selecciona el módulo que deseas gestionar</p>
+
+    <div class="modules-grid">
+      <div class="module-card">
+        <div class="module-icon-container delivery-icon">
+          <img src="assets/delivery-icon.png" alt="Delivery Icon" class="module-icon">
+        </div>
+        <h2>Delivery</h2>
+        <p>Gestiona repartidores, asignaciones, búsquedas por proximidad y control por zonas</p>
+        <button class="btn btn-module" routerLink="/delivery/gestion">Ir a Deliveries</button>
+      </div>
+
+      <div class="module-card">
+        <div class="module-icon-container zones-icon">
+          <img src="assets/zone-icon.png" alt="Zonas Icon" class="module-icon">
+        </div>
+        <h2>Zonas</h2>
+        <p>Administra zonas de entrega, cobertura geográfica y actualización de áreas</p>
+        <button class="btn btn-module" routerLink="/zonas/gestion">Ir a Zonas</button>
+      </div>
+    </div>
+  </main>
+</div>

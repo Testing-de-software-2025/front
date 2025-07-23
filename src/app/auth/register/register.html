@@ -1,0 +1,29 @@
+<div class="auth-container">
+  <div class="auth-card">
+    <div class="logo-container">
+      <img src="assets/logo.jpg" alt="DelyTrack Logo" width="36" height="36">
+      <span class="logo-text">DelyTrack</span>
+    </div>
+    <div class="form-container">
+      <h2>Registro</h2>
+      <p class="subtitle">Crea tu cuenta en DelyTrack</p>
+      <form #registerForm="ngForm" (ngSubmit)="register()">
+        <div class="mb-3">
+          <label for="email" class="form-label">Email</label>
+          <input type="email" class="form-control" id="email" name="email" placeholder="Escribe aquí" [(ngModel)]="email" required email>
+        </div>
+        <div class="mb-4">
+          <label for="password" class="form-label">Contraseña</label>
+          <input type="password" class="form-control" id="password" name="password" placeholder="Escribe aquí" [(ngModel)]="password" required minlength="6">
+        </div>
+        <div *ngIf="errorMessage" class="alert alert-danger mt-3">
+          {{ errorMessage }}
+        </div>
+        <button type="submit" class="btn btn-custom w-100" [disabled]="!registerForm.valid">Regístrate</button>
+      </form>
+      <div class="redirect-link">
+        <span>¿Ya tienes cuenta? </span><a routerLink="/login">Inicia sesión</a>
+      </div>
+    </div>
+  </div>
+</div>

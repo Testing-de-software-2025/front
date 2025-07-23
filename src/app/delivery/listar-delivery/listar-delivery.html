@@ -1,0 +1,264 @@
+<!-- Delete Confirmation Popup -->
+<div class="popup-overlay" *ngIf="showDeletePopup">
+  <div class="popup-content delete-popup">
+    <p>¿Estás seguro que quieres eliminar este delivery?</p>
+    <div class="popup-actions">
+      <button class="cancel-button" (click)="closePopups()">Cancelar</button>
+      <button class="confirm-delete-button" (click)="confirmDelete()">
+        Eliminar
+      </button>
+    </div>
+  </div>
+</div>
+
+<!-- Edit Delivery Popup -->
+<div class="popup-overlay" *ngIf="showEditPopup && selectedDelivery">
+  <div class="popup-content edit-popup">
+    <h2>Actualizar Delivery</h2>
+    <form #editDeliveryForm="ngForm" (ngSubmit)="saveChanges()">
+      <div class="form-group">
+        <label for="status">Estado:</label>
+        <select id="status" name="status" [(ngModel)]="selectedDelivery.status">
+          <option *ngFor="let state of deliveryStates" [value]="state.value">
+            {{ state.label }}
+          </option>
+        </select>
+      </div>
+      <div class="form-group">
+        <label for="latitude">Latitud:</label>
+        <input
+          type="number"
+          id="latitude"
+          name="latitude"
+          [(ngModel)]="editLatitude"
+          required
+        />
+      </div>
+      <div class="form-group">
+        <label for="longitude">Longitud:</label>
+        <input
+          type="number"
+          id="longitude"
+          name="longitude"
+          [(ngModel)]="editLongitude"
+          required
+        />
+      </div>
+      <div class="form-group">
+        <details class="zones-details">
+          <summary>Asignar Zonas</summary>
+          <div class="zones-checklist">
+            <div *ngFor="let zone of allZones" class="zone-item">
+              <label>
+                <input
+                  type="checkbox"
+                  [name]="'zone-' + zone.id"
+                  [(ngModel)]="tempSelectedZones[zone.id]"
+                />
+                {{ zone.name }}
+              </label>
+            </div>
+            <p *ngIf="allZones.length === 0" class="no-zones-message">
+              No hay zonas creadas.
+            </p>
+          </div>
+        </details>
+      </div>
+      <div class="popup-actions">
+        <button type="button" class="cancel-button" (click)="closePopups()">
+          Cancelar
+        </button>
+        <button
+          type="submit"
+          class="save-button"
+          [disabled]="!editDeliveryForm.valid"
+        >
+          Guardar
+        </button>
+      </div>
+    </form>
+  </div>
+</div>
+
+<div class="list-container">
+  <div class="list-card">
+    <div class="header">
+      <button class="back-button" (click)="goBack()">
+        <svg
+          width="24"
+          height="24"
+          viewBox="0 0 24 24"
+          fill="none"
+          xmlns="http://www.w3.org/2000/svg"
+        >
+          <path
+            d="M15 18L9 12L15 6"
+            stroke="#111111"
+            stroke-width="2"
+            stroke-linecap="round"
+            stroke-linejoin="round"
+          />
+        </svg>
+      </button>
+      <h2>Listar Deliveries</h2>
+    </div>
+
+    <div class="search-container">
+      <div class="search-input-wrapper">
+        <input
+          type="text"
+          class="search-input"
+          placeholder="Buscar Deliveries"
+          [(ngModel)]="searchTerm"
+          (input)="applyFilter()"
+        />
+        <svg
+          class="search-icon"
+          width="20"
+          height="20"
+          viewBox="0 0 24 24"
+          fill="none"
+          xmlns="http://www.w3.org/2000/svg"
+        >
+          <path
+            d="M11 19C15.4183 19 19 15.4183 19 11C19 6.58172 15.4183 3 11 3C6.58172 3 3 6.58172 3 11C3 15.4183 6.58172 19 11 19Z"
+            stroke="#333"
+            stroke-width="2"
+            stroke-linecap="round"
+            stroke-linejoin="round"
+          />
+          <path
+            d="M21 21L16.65 16.65"
+            stroke="#333"
+            stroke-width="2"
+            stroke-linecap="round"
+            stroke-linejoin="round"
+          />
+        </svg>
+      </div>
+      <select
+        class="filter-select"
+        [(ngModel)]="filterBy"
+        (change)="applyFilter()"
+      >
+        <option value="all">Filtrar por...</option>
+        <option value="id">ID</option>
+        <option value="status">Estado</option>
+        <option value="zone">Zona</option>
+        <option value="latitude">Latitud</option>
+        <option value="longitude">Longitud</option>
+      </select>
+    </div>
+
+    <p class="list-title">Deliveries Registrados:</p>
+
+    <div *ngIf="filteredDeliveries.length > 0; else noDeliveries">
+      <div class="deliveries-list">
+        <div class="delivery-item" *ngFor="let delivery of pagedDeliveries">
+          <div class="delivery-info">
+            <div class="info-grid">
+              <p><strong>Id:</strong> {{ delivery.id }}</p>
+              <p>
+                <strong>Estado:</strong>
+                <span
+                  class="status-badge status-{{
+                    delivery.status.toLowerCase().replace(' ', '-')
+                  }}"
+                  >{{ getStatusLabel(delivery.status) }}</span
+                >
+              </p>
+              <p><strong>Latitud:</strong> {{ delivery.location.latitude }}</p>
+              <p>
+                <strong>Longitud:</strong> {{ delivery.location.longitude }}
+              </p>
+              <p class="full-width">
+                <strong>Zona/s:</strong> {{ getZoneNames(delivery.zones) }}
+              </p>
+            </div>
+          </div>
+          <div class="delivery-actions">
+            <button class="icon-button" (click)="editDelivery(delivery)">
+              <svg
+                width="20"
+                height="20"
+                viewBox="0 0 24 24"
+                fill="none"
+                xmlns="http://www.w3.org/2000/svg"
+              >
+                <path
+                  d="M11 4H4C3.46957 4 2.96086 4.21071 2.58579 4.58579C2.21071 4.96086 2 5.46957 2 6V20C2 20.5304 2.21071 21.0391 2.58579 21.4142C2.96086 21.7893 3.46957 22 4 22H18C18.5304 22 19.0391 21.7893 19.4142 21.4142C19.7893 21.0391 20 20.5304 20 20V13"
+                  stroke="#333"
+                  stroke-width="2"
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                />
+                <path
+                  d="M18.5 2.5C18.8978 2.10218 19.4374 1.87868 20 1.87868C20.5626 1.87868 21.1022 2.10218 21.5 2.5C21.8978 2.89782 22.1213 3.43739 22.1213 4C22.1213 4.56261 21.8978 5.10218 21.5 5.5L12 15L8 16L9 12L18.5 2.5Z"
+                  stroke="#333"
+                  stroke-width="2"
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                />
+              </svg>
+            </button>
+            <button class="icon-button" (click)="deleteDelivery(delivery)">
+              <svg
+                width="20"
+                height="20"
+                viewBox="0 0 24 24"
+                fill="none"
+                xmlns="http://www.w3.org/2000/svg"
+              >
+                <path
+                  d="M3 6H5H21"
+                  stroke="#E53E3E"
+                  stroke-width="2"
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                />
+                <path
+                  d="M8 6V4C8 3.46957 8.21071 2.96086 8.58579 2.58579C8.96086 2.21071 9.46957 2 10 2H14C14.5304 2 15.0391 2.21071 15.4142 2.58579C15.7893 2.96086 16 3.46957 16 4V6M19 6V20C19 20.5304 18.7893 21.0391 18.4142 21.4142C18.0391 21.7893 17.5304 22 17 22H7C6.46957 22 5.96086 21.7893 5.58579 21.4142C5.21071 21.0391 5 20.5304 5 20V6H19Z"
+                  stroke="#E53E3E"
+                  stroke-width="2"
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                />
+              </svg>
+            </button>
+          </div>
+        </div>
+      </div>
+
+      <div class="pagination">
+        <a
+          href="#"
+          class="page-link"
+          (click)="setPage(currentPage - 1); $event.preventDefault()"
+          [class.disabled]="totalPages <= 1 || currentPage === 1"
+          [attr.aria-disabled]="totalPages <= 1 || currentPage === 1 ? true : null"
+          >&lt; Anterior</a
+        >
+        <a
+          href="#"
+          *ngFor="let page of pages"
+          class="page-number"
+          [class.active]="page === currentPage"
+          (click)="setPage(page); $event.preventDefault()"
+          >{{ page }}</a
+        >
+        <a
+          href="#"
+          class="page-link"
+          (click)="setPage(currentPage + 1); $event.preventDefault()"
+          [class.disabled]="totalPages <= 1 || currentPage === totalPages"
+          [attr.aria-disabled]="totalPages <= 1 || currentPage === totalPages ? true : null"
+          >Siguiente &gt;</a
+        >
+      </div>
+    </div>
+
+    <ng-template #noDeliveries>
+      <p class="no-data-message">No se encontraron deliveries.</p>
+    </ng-template>
+  </div>
+</div>
