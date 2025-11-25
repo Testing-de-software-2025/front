@@ -20,7 +20,10 @@
         </div>
         <div class="mb-4">
           <label for="password" class="form-label">Contraseña</label>
-          <input type="password" class="form-control" id="password" name="password" placeholder="Escribe aquí" [(ngModel)]="password" required>
+          <div class="password-wrapper">
+            <input [type]="showPassword ? 'text' : 'password'" class="form-control" id="password" name="password" placeholder="Escribe aquí" [(ngModel)]="password" required>
+            <button type="button" class="toggle-password-btn" aria-label="Mostrar u ocultar contraseña" (click)="toggleShowPassword()">{{ showPassword ? 'Ocultar' : 'Mostrar' }}</button>
+          </div>
         </div>
         <button type="submit" class="btn btn-custom w-100" [disabled]="!loginForm.valid">Iniciar sesión</button>
       </form>

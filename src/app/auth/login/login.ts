@@ -16,6 +16,7 @@ export class LoginComponent implements OnInit {
   password = '';
   errorMessage: string | null = null;
   successMessage: string | null = null;
+  showPassword = false;
 
   constructor(
     private authService: AuthService,
@@ -46,5 +47,9 @@ export class LoginComponent implements OnInit {
       this.errorMessage = error.message || 'Email o contraseña incorrectos.';
       console.error('Login failed:', error);
     }
+  }
+
+  toggleShowPassword(): void {
+    this.showPassword = !this.showPassword;
   }
 }

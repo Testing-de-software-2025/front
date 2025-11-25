@@ -92,6 +92,27 @@ html, body {
   outline: none;
 }
 
+.password-wrapper {
+  position: relative;
+}
+
+.toggle-password-btn {
+  position: absolute;
+  right: 12px;
+  top: 50%;
+  transform: translateY(-50%);
+  background: transparent;
+  border: none;
+  color: #0077b6;
+  font-weight: 600;
+  cursor: pointer;
+  padding: 4px 8px;
+}
+
+.toggle-password-btn:focus {
+  outline: none;
+}
+
 /* BOTÓN */
 .btn-custom {
   background-color: #ade8f4;
